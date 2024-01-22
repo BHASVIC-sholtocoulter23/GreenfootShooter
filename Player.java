@@ -13,16 +13,16 @@ public class Player extends Actor
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     protected GreenfootImage sprite = new GreenfootImage("ppl1.png");
-   
+
     
     
-    protected int xVel = 0;
-    protected int yVel = 0;
-    protected int walkSpeed = 0;
-    protected int jumpStrength = 5;
+    protected float xVel = 0;
+    protected float yVel = 0;
+    protected int walkSpeed = 3;
+    protected int jumpStrength = 17;
     
     protected final int drag = 1;
-    protected final int gravity = 1;
+    protected final int gravity = 3;
     
     public Player()
     {
@@ -36,21 +36,37 @@ public class Player extends Actor
     }
     
     private void movement(){
-        
-        if(Greenfoot.isKeyDown("w") && isTouching(Block)){
-            yVel -= jumpStrength;
+
+        if(getOneObjectAtOffset(0, sprite.getHeight()/2+2, Block.class) != null){
+            yVel = 0;
+            if(Greenfoot.isKeyDown("w")){
+                yVel -= jumpStrength;
+            }
+
         }
-        if(this.getY() < 400){
+        else{
             gravity();
         }
-        else if(yVel < 0){
-            yVel = 0;
+        if(Greenfoot.isKeyDown("a") && xVel > -7){
+            xVel -= walkSpeed;
+        }
+        if(Greenfoot.isKeyDown("d") && xVel < 7){
+            xVel += walkSpeed;
+        }
+        if(xVel < 0){
+            xVel += drag;
+        }
+        else if(xVel > 0){
+            xVel -= drag;
         }
         
-        this.setLocation(getX(), getY()+yVel);
+        this.setLocation(getX()+(int)xVel, getY()+(int)yVel);
     }
     private void gravity(){
-        yVel += gravity;
+        yVel += (float)gravity/4;
+        if(getOneObjectAtOffset(0, -sprite.getHeight()/2+2, Block.class) != null && yVel < 0){
+            yVel = 0;
+        }
     }
         
    
