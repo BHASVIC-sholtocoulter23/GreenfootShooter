@@ -13,6 +13,17 @@ public class Player extends Actor
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     protected GreenfootImage sprite = new GreenfootImage("ppl1.png");
+   
+    
+    
+    protected int xVel = 0;
+    protected int yVel = 0;
+    protected int walkSpeed = 0;
+    protected int jumpStrength = 5;
+    
+    protected final int drag = 1;
+    protected final int gravity = 1;
+    
     public Player()
     {
         this.setImage(sprite);
@@ -20,8 +31,27 @@ public class Player extends Actor
     
     public void act()
     {
+        movement();
         
-        // Add your action code here.
     }
+    
+    private void movement(){
+        
+        if(Greenfoot.isKeyDown("w") && isTouching(Block)){
+            yVel -= jumpStrength;
+        }
+        if(this.getY() < 400){
+            gravity();
+        }
+        else if(yVel < 0){
+            yVel = 0;
+        }
+        
+        this.setLocation(getX(), getY()+yVel);
+    }
+    private void gravity(){
+        yVel += gravity;
+    }
+        
    
 }
