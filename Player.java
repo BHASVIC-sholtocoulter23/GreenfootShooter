@@ -18,7 +18,7 @@ public class Player extends Actor
     
     protected float xVel = 0;
     protected float yVel = 0;
-    protected int walkSpeed = 3;
+    protected int walkSpeed = 2;
     protected int jumpStrength = 17;
     
     protected final int drag = 1;
@@ -42,15 +42,14 @@ public class Player extends Actor
             if(Greenfoot.isKeyDown("w")){
                 yVel -= jumpStrength;
             }
-
         }
         else{
             gravity();
         }
-        if(Greenfoot.isKeyDown("a") && xVel > -7){
+        if(Greenfoot.isKeyDown("a") && xVel > -7 && getOneObjectAtOffset(-sprite.getWidth()/2-10, 0, Block.class) == null){
             xVel -= walkSpeed;
         }
-        if(Greenfoot.isKeyDown("d") && xVel < 7){
+        if(Greenfoot.isKeyDown("d") && xVel < 7 && getOneObjectAtOffset(sprite.getWidth()/2+10, 0, Block.class) == null){
             xVel += walkSpeed;
         }
         if(xVel < 0){
@@ -64,7 +63,10 @@ public class Player extends Actor
     }
     private void gravity(){
         yVel += (float)gravity/4;
-        if(getOneObjectAtOffset(0, -sprite.getHeight()/2+2, Block.class) != null && yVel < 0){
+        if(yVel >= 0 && (getOneObjectAtOffset(-sprite.getWidth()/2, sprite.getHeight()/2, Block.class) != null || getOneObjectAtOffset(sprite.getWidth()/2, sprite.getHeight()/2, Block.class) != null)){
+            yVel = 0;
+        }
+        else if(yVel < 0 && (getY()-30 <=0 || (getOneObjectAtOffset(-sprite.getWidth()/2, -sprite.getHeight()/2, Block.class) != null || getOneObjectAtOffset(sprite.getWidth()/2, -sprite.getHeight()/2, Block.class) != null))){
             yVel = 0;
         }
     }
