@@ -14,7 +14,11 @@ public class Player extends Actor
      */
     protected GreenfootImage sprite = new GreenfootImage("ppl1.png");
 
+    protected int worldWidth = 0;
+    protected int worldHeight = 0;
     
+    protected int playerX = 0;
+    protected int playerY = 0;
     
     protected float xVel = 0;
     protected float yVel = 0;
@@ -24,19 +28,28 @@ public class Player extends Actor
     protected final int drag = 1;
     protected final int gravity = 3;
     
-    public Player()
+    
+    public Player(int x, int y)
     {
         this.setImage(sprite);
+        worldWidth = x;
+        worldHeight = y;
     }
     
     public void act()
     {
         movement();
-        
     }
     
     private void movement(){
+    
+        playerX = getX();
+        playerY = getY();
+        while(touchingGround()){
+                   this.setLocation(playerX, playerY-1);
+        }
 
+        
         if(getOneObjectAtOffset(0, sprite.getHeight()/2+2, Block.class) != null){
             yVel = 0;
             if(Greenfoot.isKeyDown("w")){
@@ -58,17 +71,43 @@ public class Player extends Actor
         else if(xVel > 0){
             xVel -= drag;
         }
-        
+        blockCollision();
         this.setLocation(getX()+(int)xVel, getY()+(int)yVel);
     }
     private void gravity(){
         yVel += (float)gravity/4;
-        if(yVel >= 0 && (getOneObjectAtOffset(-sprite.getWidth()/2, sprite.getHeight()/2, Block.class) != null || getOneObjectAtOffset(sprite.getWidth()/2, sprite.getHeight()/2, Block.class) != null)){
+    }
+    private void blockCollision(){
+        if(yVel > 0 && touchingGround()){
             yVel = 0;
         }
-        else if(yVel < 0 && (getY()-30 <=0 || (getOneObjectAtOffset(-sprite.getWidth()/2, -sprite.getHeight()/2, Block.class) != null || getOneObjectAtOffset(sprite.getWidth()/2, -sprite.getHeight()/2, Block.class) != null))){
+        else if(yVel < 0 && touchingRoof()){
             yVel = 0;
+        }   
+        if((xVel > 0 || xVel < 0) && touchingWall()){
+            xVel = 0;
         }
+    }
+    private boolean touchingWall(){
+        if((getOneObjectAtOffset(sprite.getWidth()/2, (sprite.getHeight()/2)-5, Block.class) != null || getOneObjectAtOffset(sprite.getWidth()/2, (-sprite.getHeight()/2)+5, Block.class) != null)){
+            return(true);
+        }
+        else if((getOneObjectAtOffset(-sprite.getWidth()/2, (sprite.getHeight()/2)-5, Block.class) != null || getOneObjectAtOffset(-sprite.getWidth()/2, (-sprite.getHeight()/2)+5, Block.class) != null)){
+            return(true);
+        }
+        return(false);
+    }
+    private boolean touchingGround(){
+        if((getOneObjectAtOffset((-sprite.getWidth()/2)+5, sprite.getHeight()/2, Block.class) != null || getOneObjectAtOffset((sprite.getWidth()/2)-5, sprite.getHeight()/2, Block.class) != null)){
+            return(true);
+        }
+        return(false);
+    }
+    private boolean touchingRoof(){
+        if((getY()-30 <=0 || (getOneObjectAtOffset((-sprite.getWidth()/2)+5, -sprite.getHeight()/2, Block.class) != null || getOneObjectAtOffset((sprite.getWidth()/2)-5, -sprite.getHeight()/2, Block.class) != null))){
+            return(true);
+        }
+        return(false);
     }
         
    

@@ -8,7 +8,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class MyWorld extends World
 {
-    
+    protected int worldWidth = 1000;
+    protected int worldHeight = 800;
     /**
      * Constructor for objects of class MyWorld.
      * 
@@ -16,8 +17,8 @@ public class MyWorld extends World
     public MyWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(600, 400, 1); 
-        addObject(new Player(), 70, 70);
+        super(1000, 800, 1); 
+        addObject(new Player(worldWidth, worldHeight), 70, 70);
        
         for(int i=0;i<10;i++){
             addObject(new Block(), i*72, 500);
