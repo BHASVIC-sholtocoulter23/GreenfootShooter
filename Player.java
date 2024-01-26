@@ -12,28 +12,41 @@ public class Player extends Actor
      * Act - do whatever the Player wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    protected GreenfootImage sprite = new GreenfootImage("ppl1.png");
-
-    protected int worldWidth = 0;
-    protected int worldHeight = 0;
+    private GreenfootImage sprite = new GreenfootImage("ppl1.png");
+    
     
     protected int playerX = 0;
     protected int playerY = 0;
+    protected boolean facingRight = true;
+    protected int usingGun = 1;
+    protected MyWorld arena;
     
-    protected float xVel = 0;
-    protected float yVel = 0;
-    protected int walkSpeed = 2;
-    protected int jumpStrength = 17;
+    private float xVel = 0;
+    private float yVel = 0;
+    private int walkSpeed = 2;
+    private int jumpStrength = 17;
     
-    protected final int drag = 1;
-    protected final int gravity = 3;
+    private final int drag = 1;
+    private final int gravity = 3;
     
+    private Gun gun; 
     
-    public Player(int x, int y)
+    public int getPlayerX(){
+        return(playerX);
+    }
+    public int getPlayerY(){
+        return(playerY);
+    }
+    public boolean facingRight(){
+        return(facingRight);
+    }
+    
+    public Player()
     {
         this.setImage(sprite);
-        worldWidth = x;
-        worldHeight = y;
+        arena = (MyWorld)getWorld();
+        gun = new Gun(this);
+        arena.addObject(gun, 0, 0);
     }
     
     public void act()
@@ -47,6 +60,7 @@ public class Player extends Actor
         playerY = getY();
         while(touchingGround()){
                    this.setLocation(playerX, playerY-1);
+                   playerY = getY();
         }
 
         
@@ -61,9 +75,11 @@ public class Player extends Actor
         }
         if(Greenfoot.isKeyDown("a") && xVel > -7 && getOneObjectAtOffset(-sprite.getWidth()/2-10, 0, Block.class) == null){
             xVel -= walkSpeed;
+            facingRight = false;
         }
         if(Greenfoot.isKeyDown("d") && xVel < 7 && getOneObjectAtOffset(sprite.getWidth()/2+10, 0, Block.class) == null){
             xVel += walkSpeed;
+            facingRight = true;
         }
         if(xVel < 0){
             xVel += drag;
@@ -78,33 +94,38 @@ public class Player extends Actor
         yVel += (float)gravity/4;
     }
     private void blockCollision(){
-        if(yVel > 0 && touchingGround()){
+        if((yVel > 0 && touchingGround())||(yVel < 0 && touchingRoof())){
             yVel = 0;
         }
-        else if(yVel < 0 && touchingRoof()){
-            yVel = 0;
-        }   
-        if((xVel > 0 || xVel < 0) && touchingWall()){
+        if((xVel > 0 && wallRight())||(xVel < 0 && wallLeft())){
             xVel = 0;
         }
     }
-    private boolean touchingWall(){
-        if((getOneObjectAtOffset(sprite.getWidth()/2, (sprite.getHeight()/2)-5, Block.class) != null || getOneObjectAtOffset(sprite.getWidth()/2, (-sprite.getHeight()/2)+5, Block.class) != null)){
-            return(true);
-        }
-        else if((getOneObjectAtOffset(-sprite.getWidth()/2, (sprite.getHeight()/2)-5, Block.class) != null || getOneObjectAtOffset(-sprite.getWidth()/2, (-sprite.getHeight()/2)+5, Block.class) != null)){
-            return(true);
-        }
-        return(false);
-    }
     private boolean touchingGround(){
-        if((getOneObjectAtOffset((-sprite.getWidth()/2)+5, sprite.getHeight()/2, Block.class) != null || getOneObjectAtOffset((sprite.getWidth()/2)-5, sprite.getHeight()/2, Block.class) != null)){
+        if((getOneObjectAtOffset((-sprite.getWidth()/2)+5, sprite.getHeight()/2, Block.class) != null || 
+            getOneObjectAtOffset((sprite.getWidth()/2)-5, sprite.getHeight()/2, Block.class) != null)){
             return(true);
         }
         return(false);
     }
     private boolean touchingRoof(){
-        if((getY()-30 <=0 || (getOneObjectAtOffset((-sprite.getWidth()/2)+5, -sprite.getHeight()/2, Block.class) != null || getOneObjectAtOffset((sprite.getWidth()/2)-5, -sprite.getHeight()/2, Block.class) != null))){
+        if((getY()-30 <=0 || 
+            (getOneObjectAtOffset((-sprite.getWidth()/2)+5, -sprite.getHeight()/2, Block.class) != null || 
+             getOneObjectAtOffset((sprite.getWidth()/2)-5, -sprite.getHeight()/2, Block.class) != null))){
+            return(true);
+        }
+        return(false);
+    }
+    private boolean wallRight(){
+        if((getOneObjectAtOffset(sprite.getWidth()/2, (sprite.getHeight()/2)-5, Block.class) != null || 
+            getOneObjectAtOffset(sprite.getWidth()/2, (-sprite.getHeight()/2)+5, Block.class) != null)){
+            return(true);
+        }
+        return(false);
+    }
+    private boolean wallLeft(){
+        if((getOneObjectAtOffset(-sprite.getWidth()/2, (sprite.getHeight()/2)-5, Block.class) != null || 
+            getOneObjectAtOffset(-sprite.getWidth()/2, (-sprite.getHeight()/2)+5, Block.class) != null)){
             return(true);
         }
         return(false);

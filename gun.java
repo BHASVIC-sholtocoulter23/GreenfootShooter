@@ -1,19 +1,27 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class gun here.
+ * Write a description of class Gun here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class gun extends Player
+public class Gun extends Actor
 {
-    /**
-     * Act - do whatever the gun wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+    private int gunX = 0;
+    private int gunY = 0;
+    private boolean facingRight = true;
+    private Player player;
+    
+    public Gun(Player userPlayer){
+        player = userPlayer;
+    }
+    
     public void act()
     {
+        
+        gunX = player.getPlayerX();
+        
         // Add your action code here.
     }
 }

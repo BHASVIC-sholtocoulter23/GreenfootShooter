@@ -8,8 +8,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class MyWorld extends World
 {
-    protected int worldWidth = 1000;
-    protected int worldHeight = 800;
+    private int worldWidth = 1000;
+    private int worldHeight = 800;
     /**
      * Constructor for objects of class MyWorld.
      * 
@@ -18,19 +18,32 @@ public class MyWorld extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1000, 800, 1); 
-        addObject(new Player(worldWidth, worldHeight), 70, 70);
-       
-        for(int i=0;i<10;i++){
-            addObject(new Block(), i*72, 500);
-            addObject(new Block(), i*72, 0);
-            addObject(new Block(), -30, i*72);
-            addObject(new Block(), 630, i*72);
+        addObject(new Player(), 70, 70);
+        
+        
+        
+        createBlock(worldWidth+1, 0, worldWidth, 'h');
+        createBlock(worldWidth+1, 0, 0, 'h');
+        createBlock(worldHeight+1, 0, 0, 'v');
+        createBlock(worldHeight+1, worldWidth, 0, 'v');
+
+        
+        createBlock(2, 0, 200, 'h');
+        createBlock(2, 400, 200, 'h');
+        createBlock(2, 400, 650, 'h');
+        createBlock(2, 450, 550, 'h');
+    }
+    private void createBlock(int length, int xPos, int yPos, char rotation){
+        if(rotation == 'h'){
+            for(int i=0;i<length;i++){
+                addObject(new Block(), xPos+i*72, yPos);
+            }
         }
-        for(int i=0;i<2;i++){
-            addObject(new Block(), i*72, 200);
-        }
-        for(int i=0;i<2;i++){
-            addObject(new Block(), 400+i*72, 200);
+        else{
+                for(int i=0;i<length;i++){
+                addObject(new Block(), xPos, yPos+i*72);
+            }
+            
         }
     }
 }
