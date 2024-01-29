@@ -44,11 +44,14 @@ public class Player extends Actor
     public Player()
     {
         this.setImage(sprite);
-        arena = (MyWorld)getWorld();
-        gun = new Gun(this);
-        arena.addObject(gun, 0, 0);
+
     }
-    
+
+    protected void addedToWorld(World MyWorld){
+        arena = (MyWorld)getWorld();
+        gun = new Gun((Player)this);
+        arena.addObject(gun, getX(), getY());
+    }
     public void act()
     {
         movement();

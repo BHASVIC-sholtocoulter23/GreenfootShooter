@@ -15,13 +15,19 @@ public class Gun extends Actor
     
     public Gun(Player userPlayer){
         player = userPlayer;
+        this.setImage("pistol.png");
     }
     
     public void act()
     {
-        
-        gunX = player.getPlayerX();
-        
+        facingRight = player.facingRight;
+        if(facingRight){
+            gunX = player.getPlayerX()+10;
+        }
+        else{
+            gunX = player.getPlayerX()-10;
+        }
+        gunY = player.getPlayerY();
         // Add your action code here.
     }
 }
